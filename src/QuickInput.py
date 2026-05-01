@@ -23,9 +23,9 @@ def main():
     os.makedirs('func', exist_ok=True)
 
     parser = argparse.ArgumentParser(
-        description='快速键入工具',
+        description='快速键入工具 v1.0.0\nBy FeSo4a\n使用MIT许可证',
         epilog='''
-        示例: QuickInput --key=a --key=b --key=c --time 0.5
+        示例: QuickInput --key=a --key=b --key=c --time=0.5
              QuickInput --press=2 --press=3 --press=6
         宏写法：
         [

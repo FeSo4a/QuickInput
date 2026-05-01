@@ -1,299 +1,245 @@
-# QuickInput
+# QuickInput - 快速键入工具
 
-A powerful keyboard and mouse automation tool for Windows that supports rapid key input, continuous press simulation,
-and macro execution.
+一个基于Python的键盘和鼠标自动化工具，支持按键连点、长按模拟、宏命令等功能，适用于Windows系统。
 
-## Features
+## 目录
 
-- **Rapid Key/Mouse Clicking**: Automatically repeat keyboard or mouse clicks at specified intervals
-- **Continuous Press Simulation**: Hold down keys or mouse buttons continuously
-- **Macro System**: Create and execute complex automation sequences with trigger-based macros
-- **Audio Feedback**: Built-in beep sounds to indicate start/stop of operations
-- **Easy to Use**: Simple command-line interface with clear parameter options
+- [功能特性](#功能特性)
+- [系统要求](#系统要求)
+- [使用方法](#使用方法)
+    - [基本用法](#基本用法)
+    - [命令行参数](#命令行参数)
+    - [使用示例](#使用示例)
+    - [宏命令](#宏命令)
+- [项目结构](#项目结构)
+- [技术栈](#技术栈)
+- [注意事项](#注意事项)
+- [许可证](#许可证)
 
-## Installation
+## 功能特性
 
-### Prerequisites
+- **按键连点**：以指定间隔连续按下键盘按键
+- **鼠标连点**：以指定间隔连续点击鼠标按键
+- **按键长按**：模拟持续按住键盘按键
+- **鼠标长按**：模拟持续按住鼠标按键
+- **宏命令系统**：自定义触发按键和模拟操作的宏
+- **声音提示**：操作开始和结束时提供蜂鸣提示
+- **查看所有可用按键**：列出支持的键盘和鼠标按键
 
-- Python 3.6 or higher
-- Windows operating system (for Linux/macOS, audio feedback may vary)
+## 系统要求
 
-### Dependencies
+- **操作系统**：Windows（主要支持）
+- **Python版本**：Python 3.6+
+- **依赖库**：
+    - keyboard
+    - mouse
 
-Install required packages:
+## 使用方法
 
-```bash
-pip install keyboard mouse
-```
+### 基本用法
 
-### Setup
+QuickInput通过命令行参数控制，支持多种操作模式。所有操作在启动后有2秒延迟，方便用户切换窗口。
 
-1. Clone or download this repository
-2. Navigate to the `src` directory:
-    ```bash
-    cd src
-    ```
-3. Run the tool:
-    ```bash
-    python QuickInput.py --help
-    ```
+### 命令行参数
 
-## Usage
+| 参数           | 说明                  | 兼容性                    |
+|--------------|---------------------|------------------------|
+| `--key`      | 按下键盘按键（可多次使用）       | 只能与`--time`连用          |
+| `--mouse`    | 点击鼠标按键（可多次使用）       | 只能与`--time`连用          |
+| `--time`     | 按键/鼠标点击间隔（秒）        | 只能与`--key`或`--mouse`连用 |
+| `--press`    | 持续按住键盘按键（可多次使用）     | 与其他参数冲突                |
+| `--pmouse`   | 持续按住鼠标按键（可多次使用）     | 与其他参数冲突                |
+| `--view`     | 查看可用按键列表            | 与其他参数冲突                |
+| `--func`     | 执行宏文件（func文件夹中的文件名） | 与其他参数冲突                |
+| `--showfunc` | 查看可用的宏文件列表          | 与其他参数冲突                |
 
-### Basic Syntax
+### 使用示例
 
-```bash
-python QuickInput.py
-```
+#### 1. 按键连点
 
-### Options
-
-| Option            | Description                                           | Conflicts With                         |
-|-------------------|-------------------------------------------------------|----------------------------------------|
-| `--key KEY`       | Press specified key(s) (can be used multiple times)   | `--press`, `--pmouse`, `--func`        |
-| `--mouse BUTTON`  | Click mouse button(s) (can be used multiple times)    | `--press`, `--pmouse`, `--func`        |
-| `--time SECONDS`  | Interval between clicks in seconds                    | Must be used with `--key` or `--mouse` |
-| `--press KEY`     | Continuously hold key(s) (can be used multiple times) | `--key`, `--mouse`, `--time`, `--func` |
-| `--pmouse BUTTON` | Continuously hold mouse button(s)                     | `--key`, `--mouse`, `--time`, `--func` |
-| `--func FILE`     | Load and run a macro file from `func/` folder         | All other mode parameters              |
-| `--view`          | Display all available keys and mouse buttons          | All other parameters                   |
-| `--showfunc`      | List all available macro files                        | All other parameters                   |
-
-### Control Keys
-
-- **F8**: Stop any running operation (hold to exit)
-- **2-second delay**: All modes have a 2-second countdown before starting
-
-## Examples
-
-### Rapid Key Clicking
-
-Press keys 'a', 'b', 'c' repeatedly with 0.5 second intervals:
+以0.5秒间隔连续按下a、b、c键：
 
 ```bash
-python QuickInput.py --key=a --key=b --key=c --time=0.5
+ python QuickInput.py --key=a --key=b --key=c --time=0.5
 ```
 
-### Rapid Mouse Clicking
+#### 2. 鼠标连点
 
-Click left and right mouse buttons alternately every 1 second:
+以0.3秒间隔连续点击鼠标左键和右键：
 
 ```bash
-python QuickInput.py --mouse=left --mouse=right --time=1.0
+ python QuickInput.py --mouse=left --mouse=right --time=0.3
 ```
 
-### Continuous Key Press
+#### 3. 按键长按
 
-Hold down keys '2', '3', and '6' simultaneously:
+持续按住按键2、3、6：
 
 ```bash
-python QuickInput.py --press=2 --press=3 --press=6
+ python QuickInput.py --press=2 --press=3 --press=6
 ```
 
-### Continuous Mouse Press
+#### 4. 鼠标长按
 
-Hold down the left mouse button:
+持续按住鼠标左键和中键：
 
 ```bash
-python QuickInput.py --pmouse=left
+ python QuickInput.py --pmouse=left --pmouse=middle
 ```
 
-### View Available Keys
-
-Display all supported keyboard keys and mouse buttons:
+#### 5. 查看可用按键
 
 ```bash
-python QuickInput.py --view
+ python QuickInput.py --view
 ```
 
-### List Macro Files
+#### 6. 执行宏命令
 
-Show all available macro files in the `func/` directory:
+执行func文件夹中的macro.json宏文件：
 
 ```bash
-python QuickInput.py --showfunc
+ python QuickInput.py --func=macro.json
 ```
 
-### Run a Macro
-
-Execute a macro from a JSON file:
+#### 7. 查看可用宏文件
 
 ```bash
-python QuickInput.py --func=my_macro.json
+ python QuickInput.py --showfunc
 ```
 
-## Macro System
+### 宏命令
 
-### Creating Macros
+宏命令允许你定义复杂的触发式自动化操作。
 
-Macros are stored as JSON files in the `func/` directory. The directory is automatically created when you first run the
-program.
+#### 宏文件格式
 
-### Macro File Format
+在`func`文件夹中创建JSON格式的宏文件：
 
 ```json
 [
   {
-    "key": "trigger_key",
+    "key": "触发按键",
     "keys": [
-      "key1",
-      "key2",
-      "key3"
+      "模拟按下按键1",
+      "模拟按下按键2"
     ],
     "mouses": [
-      "button1",
-      "button2"
+      "模拟点击鼠标1",
+      "模拟点击鼠标2"
     ]
-  },
-  {
-    "key": "another_trigger",
-    "keys": [
-      "ctrl",
-      "c"
-    ],
-    "mouses": []
   },
   "..."
 ]
 ```
 
-### Macro Structure
+#### 宏字段说明
 
-- **`key`**: The trigger key that activates this macro action
-- **`keys`**: Array of keyboard keys to simulate when triggered
-- **`mouses`**: Array of mouse buttons to click when triggered
+- **key**：触发按键，当按下此键时执行后续操作
+- **keys**：数组，触发后模拟按下的键盘按键列表
+- **mouses**：数组，触发后模拟点击的鼠标按键列表
 
-### Example Macro File
+#### 宏使用示例
 
-Create a file `func/copy_paste.json`:
+创建一个名为`game_macro.json`的文件：
 
 ```json
 [
   {
     "key": "f1",
     "keys": [
-      "ctrl",
-      "c"
+      "1",
+      "2",
+      "3"
     ],
     "mouses": []
   },
   {
     "key": "f2",
-    "keys": [
-      "ctrl",
-      "v"
-    ],
-    "mouses": []
-  },
-  {
-    "key": "f3",
     "keys": [],
     "mouses": [
-      "left"
+      "left",
+      "right"
     ]
   }
 ]
 ```
 
-Run it with:
+运行宏：
 
 ```bash
-python QuickInput.py --func=copy_paste.json
+ python QuickInput.py --func=game_macro.json
 ```
 
-When running:
+运行后，按下F1将依次按下1、2、3键；按下F2将依次点击鼠标左键和右键。按F8退出宏模式。
 
-- Press **F1** → Simulates Ctrl+C (copy)
-- Press **F2** → Simulates Ctrl+V (paste)
-- Press **F3** → Simulates left mouse click
-- Press **F8** → Exit macro mode
+## 项目结构
 
-## Supported Keys
+```text
+QuickInput/ 
+├── src/ 
+│ ├── QuickInput.py # 主程序入口 
+│ ├── func/ # 宏文件存储目录（运行时自动创建） 
+│ ├── operation/ # 操作执行模块 
+│ │ ├── __init__.py 
+│ │ ├── click.py # 连点操作（键盘/鼠标） 
+│ │ ├── press.py # 长按操作（键盘/鼠标） 
+│ │ ├── view.py # 查看按键列表 
+│ │ └── function.py # 宏命令执行 
+│ ├── trigger/ # 触发条件判断模块 
+│ │ ├── __init__.py 
+│ │ ├── click.py # 连点触发判断 
+│ │ ├── press.py # 长按触发判断 
+│ │ ├── view.py # 查看触发判断 
+│ │ └── function.py # 宏命令触发判断 
+│ └── song/ # 音效模块 
+│ ├── __init__.py 
+│ └── beep.py # 蜂鸣提示音 
+└── README.md # 项目说明文档
+```
 
-### Keyboard Keys
+## 技术栈
 
-- **Letters**: a - z
-- **Numbers**: 0 - 9
-- **Function Keys**: f1 - f12
-- **Special Keys**: enter, esc, tab, backspace, delete, space
-- **Arrow Keys**: up, down, left, right
-- **Modifier Keys**: ctrl, alt, shift, win
-- **Lock Keys**: caps lock, num lock, scroll lock
+- **编程语言**：Python 3.6+
+- **核心库**：
+    - `keyboard`：键盘事件监听和模拟
+    - `mouse`：鼠标事件监听和模拟
+    - `argparse`：命令行参数解析
+    - `json`：宏文件解析
+    - `winsound`：Windows系统蜂鸣音（Windows专用）
 
-### Mouse Buttons
+## 注意事项
 
-- `left` - Left mouse button
-- `right` - Right mouse button
-- `middle` - Middle mouse button (scroll wheel click)
+1. **管理员权限**：某些功能可能需要以管理员权限运行
+2. **停止操作**：所有持续操作都可以通过长按**F8**键停止
+3. **2秒延迟**：操作启动后有2秒延迟，便于切换到目标窗口
+4. **声音提示**：操作开始和结束时有蜂鸣音提示
+5. **互斥参数**：不同模式的参数不能同时使用，详见参数说明
+6. **宏文件位置**：宏文件必须放在`func`文件夹中
+7. **系统兼容性**：主要针对Windows系统设计，其他系统可能功能受限
 
-## How It Works
+## 开发说明
 
-### Operation Modes
+### 添加新按键支持
 
-1. **Click Mode** (`--key`/`--mouse` + `--time`)
-    - Repeatedly presses keys or clicks mouse at specified intervals
-    - Starts after 2-second delay with audio feedback
-    - Press F8 to stop
+在`QuickInput.py`中修改`standard_keys`或`standard_mouse`列表：
 
-2. **Press Mode** (`--press`/`--pmouse`)
-    - Holds down keys or mouse buttons continuously
-    - Useful for games or applications requiring sustained input
-    - Press F8 to release and stop
+```python
+from typing import *
 
-3. **Macro Mode** (`--func`)
-    - Loads predefined automation sequences
-    - Trigger actions by pressing specified keys
-    - Runs until F8 is pressed
+standard_keys: Final[list] = ['a', 'b', 'c', ...]  # 添加新按键
+```
 
-### Safety Features
+### 代码架构
 
-- **2-second startup delay**: Gives you time to switch to target application
-- **Audio feedback**: Beep sounds confirm operation start/stop
-- **F8 emergency stop**: Hold F8 to immediately stop any operation
-- **Parameter validation**: Prevents conflicting parameter combinations
+- **operation模块**：负责执行具体的键盘/鼠标操作
+- **trigger模块**：负责判断当前应该执行哪种操作模式
+- **song模块**：提供声音提示功能
+- **主程序**：解析命令行参数并调度相应操作
 
-## Tips & Best Practices
+## 许可证
 
-1. **Test in Safe Environment**: Always test macros in a safe environment first
-2. **Use Appropriate Intervals**: Set `--time` values that won't overwhelm applications
-3. **Keep Macros Organized**: Use descriptive filenames for your macro files
-4. **Remember F8**: Always remember that F8 stops the current operation
-5. **Administrator Rights**: Some applications may require running as administrator
-
-## Troubleshooting
-
-### Common Issues
-
-**Issue**: Tool doesn't respond to key presses
-
-- **Solution**: Try running as administrator
-
-**Issue**: Macro file not found
-
-- **Solution**: Ensure the file exists in the `func/` directory and use the exact filename
-
-**Issue**: Keys not working in certain applications
-
-- **Solution**: Some games/applications block simulated input; try running as administrator
-
-**Issue**: Audio feedback not working on Linux/macOS
-
-- **Solution**: This is expected; terminal bell may not be enabled on all systems
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues and enhancement requests.
-
-## License
-
-This project uses the MIT License.
-
-## Disclaimer
-
-This tool is intended for legitimate automation purposes only. Use responsibly and in compliance with applicable laws
-and terms of service of any software you interact with.
+使用MIT许可证。
 
 ---
 
-**Note**: This tool uses the `keyboard` and `mouse` libraries which may require administrator/root privileges on some
-systems for full functionality.
+**提示**：如有问题或建议，欢迎提交Issue或Pull Request。
